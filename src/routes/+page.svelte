@@ -14,6 +14,7 @@
 
 
 <h1>Welcome to Mahjong solitair</h1>
+<p class="small">Mahjong tileset designed by <a href="https://www.codeinferno.com" >Code Inferno</a></p>
 {#if !hasGame}
 <form on:submit|preventDefault={startGame}>
     <p>Pick your starting layout</p>
@@ -27,3 +28,10 @@
 {:else}
 <Mahjong format={selected} />
 {/if}
+
+
+<style>
+    .small {
+        font-size: small;
+    }
+</style>
