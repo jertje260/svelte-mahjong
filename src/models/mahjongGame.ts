@@ -1,10 +1,42 @@
-import { type TileType, type TileNumber, Tile } from "./tile";
+import { type TileType, type TileNumber, Tile, type Location } from "./tile";
 import { shuffle } from "../helpers/shuffle";
 import { LocationSets } from "./locationSets";
+export type SelectResult = "Selected" | "NotFree" | "Matched" | "NotMatching" | "Deselected"
 
 export class MahjongGame {
+    readonly BoardSize: Location
     readonly Tiles: Tile[];
+    private selectedTile: Tile | null = null;
 
+    public select(tile: Tile): SelectResult {
+        if(tile === this.selectedTile){
+            tile.IsSelected = false;
+            this.selectedTile = null;
+            return "Deselected"
+        }
+        if(!isFreeTile(tile)){
+            return "NotFree"
+        }
+
+        if(this.selectedTile == null){
+            this.selectedTile = tile;
+            tile.IsSelected = true;
+            return "Selected"
+        }
+
+        if(!this.selectedTile.matches(tile)){
+            this.selectedTile.IsSelected = false;
+            tile.IsSelected = false;
+            this.selectedTile = null;
+            return "NotMatching"
+        }
+
+        this.selectedTile.IsRemoved = true;
+        tile.IsRemoved = true;
+
+        this.selectedTile = null;
+        return "Matched"
+    }
 
     public static Create(layout: Layout): MahjongGame {
         let tiles: Tile[] = [];
@@ -58,7 +90,18 @@ export class MahjongGame {
 
     constructor(tiles: Tile[]) {
         this.Tiles = tiles;
+        this.BoardSize = {
+            X: Math.max(...tiles.map(({Location}) => Location.X )),
+            Y: Math.max(...tiles.map(({Location}) => Location.Y )),
+            Z: Math.max(...tiles.map(({Location}) => Location.Z )),
+        }
     }
 
 
+}
+
+function isFreeTile(tile: Tile): boolean {
+    // check for tiles on top
+    // check for either left or right side free
+    return true;
 }

@@ -10,7 +10,8 @@ export class Tile {
     readonly TileType: TileType;
     readonly TileNumber: TileNumber;
     private _location: Location;
-    
+    public IsSelected: boolean = false;
+    public IsRemoved: boolean = false;
     
 
     constructor(tileType: TileType, number: TileNumber) {
