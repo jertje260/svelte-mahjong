@@ -14,7 +14,7 @@ export class MahjongGame {
             this.selectedTile = null;
             return "Deselected"
         }
-        if(!isFreeTile(tile)){
+        if(!this.isFreeTile(tile)){
             return "NotFree"
         }
 
@@ -84,7 +84,6 @@ export class MahjongGame {
         for (let index = 0; index < locations.length; index++) {
             tiles[index].Location = locations[index];
         }
-        console.log(locations.length);
         return new MahjongGame(tiles)
     }
 
@@ -97,11 +96,22 @@ export class MahjongGame {
         }
     }
 
+    private isFreeTile(tile: Tile): boolean {
+
+        // check for tiles on top
+        const hasTop = this.Tiles.some(c => !c.IsRemoved && c.Location.X >= tile.Location.X -1 && c.Location.X <= tile.Location.X +1 && c.Location.Z == tile.Location.Z+1 && c.Location.Y >= tile.Location.Y -1 && c.Location.Y <= tile.Location.Y +1)
+        
+        if(hasTop){
+            return false;
+        }
+        // check for either left or right side free
+        const hasRight = this.Tiles.some(c => !c.IsRemoved && c.Location.X == tile.Location.X+2 && c.Location.Z == tile.Location.Z && c.Location.Y >= tile.Location.Y -1 && c.Location.Y <= tile.Location.Y +1)
+        
+        const hasLeft = this.Tiles.some(c => !c.IsRemoved && c.Location.X == tile.Location.X-2 && c.Location.Z == tile.Location.Z && c.Location.Y >= tile.Location.Y -1 && c.Location.Y <= tile.Location.Y +1)
+        
+        return !hasLeft || !hasRight;
+    }
 
 }
 
-function isFreeTile(tile: Tile): boolean {
-    // check for tiles on top
-    // check for either left or right side free
-    return true;
-}
+
